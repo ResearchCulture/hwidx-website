@@ -1,0 +1,51 @@
+---
+pagination:
+  data: hwidx
+  size: 1
+permalink: "/{{ pagination.items[0] }}/"
+---
+{%- set entity = hwidx[pagination.items[0]] -%}
+{%- extends "base.njk" -%}
+
+{%- block content -%}
+
+<div>
+{%- for key, value in entity -%}
+  {%- if key.startsWith('_') -%}
+    
+    {# Skip internal keys #}
+
+  {%- else -%}
+
+    <h3>{{ key | capitalize }}:</h3>
+    {%- if value is string -%}
+      <p style="margin-left: 3rem;">{{ value }}</p>
+    
+    {%- elif value is iterable -%}
+      <div style="margin-left: 3rem;">
+        {%- for line in value -%}
+          <p>{{ line }}</p>
+        {%- endfor -%}
+      </div>
+    
+    {%- else -%}
+      <div style="margin-left: 3rem;">
+        {%- for subkey, item in value -%}
+          <h4>{{ subkey | capitalize }}:</h4>
+          <p style="margin-left: 3rem;">{{ item }}</p>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+  {%- endif -%}
+{% endfor %}
+</div>
+
+<br /><br /><br />
+
+<div class="yaml-record">
+  <h3>YAML Record</h3>
+  <tt><pre>{{ entity | toYAML }}</pre></tt>
+</div>
+
+{% endblock content %}

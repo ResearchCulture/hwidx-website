@@ -1,0 +1,32 @@
+{
+  "name": "hwidx-website",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "clean": "rm -rf _site",
+    "dev:11ty": "eleventy --serve --watch",
+    "build": "npx @11ty/eleventy"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ResearchCulture/hwidx-website.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ResearchCulture/hwidx-website/issues"
+  },
+  "homepage": "https://github.com/ResearchCulture/hwidx-website#readme",
+  "dependencies": {
+    "@11ty/eleventy": "^3.1.2",
+    "@tailwindcss/postcss": "^4.1.14",
+    "glob": "^11.0.3",
+    "js-yaml": "^4.1.0",
+    "markdown-it-deflist": "^3.0.0",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.14"
+  }
+}

@@ -1,0 +1,147 @@
+@import "tailwindcss";
+
+@theme {
+  /* This makes Tailwind utilities available for @apply */
+}
+
+h1, h2, h3, h4, h5, h6 {
+    @apply font-bold;
+    @apply mb-2;
+}
+
+h1 {
+    @apply text-4xl;
+}
+
+h2 {
+    @apply text-3xl;
+}
+
+h3 {
+    @apply text-2xl;
+}
+
+.big-title {
+    @apply text-5xl;
+    @apply font-extrabold;
+    @apply mb-6;
+}
+
+.big-title > a {
+    @apply text-white;
+    @apply no-underline;
+    border: none !important
+}
+
+.content {
+    max-width: 60rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 2rem;
+}
+
+a {
+    color: blue;
+    border-bottom: 1px solid blue;
+}
+
+a::after {
+    content: "↗";
+    font-size: 0.5em;
+    vertical-align: top;
+    padding-left: 0.1rem;
+    text-decoration: none;
+}
+
+p:not(:last-child) {
+    @apply mb-6;
+}
+
+blockquote {
+    @apply border-l-4;
+    @apply border-gray-300;
+    @apply pl-4;
+    @apply italic;
+    @apply text-gray-600;
+    @apply mb-6;
+}
+
+code {
+    @apply bg-gray-100;
+    @apply px-1;
+    @apply py-0.5;
+    @apply rounded;
+}
+
+table {
+    @apply table-auto;
+    @apply ml-auto mr-auto;
+    border-collapse: separate;
+    border-spacing: 2rem 0.5rem;
+}
+
+header {
+    @apply bg-gray-800;
+    @apply text-white;
+    @apply mb-4;
+    padding-top: 16px;
+    padding-left: 16px;
+    padding-right: 16px;
+    overflow: hidden;
+}
+
+header > h1 {
+    @apply m-0;
+    @apply p-0;
+    line-height: 1;
+}
+
+.yaml-record {
+    @apply bg-gray-100;
+    @apply p-4;
+    @apply rounded;
+    @apply font-mono;
+    @apply text-sm;
+    @apply overflow-x-auto;
+    @apply mb-6;
+}
+
+ul {
+    @apply list-disc;
+    @apply pl-6;
+    @apply mb-4;
+}
+
+ul:last-child {
+    @apply mb-0;
+}
+
+img{
+    @apply mb-6;
+    @apply rounded-lg;
+    max-width: 60%;
+    min-width: 200px;
+    @apply mx-auto;
+}
+
+footer {
+    @apply w-full;
+    @apply flex;
+    @apply gap-4;
+    @apply justify-center;
+    @apply bg-gray-800;
+    @apply text-white;
+    @apply text-center;
+    @apply pt-4;
+}
+
+footer > p {
+    display: inline-block;
+    @apply m-0;
+    @apply mb-2;
+}
+
+footer a {
+    @apply text-blue-400;
+    border: none;
+}
