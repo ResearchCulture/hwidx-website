@@ -1,3 +1,4 @@
 [submodule "src/_data/hwidx"]
 	path = src/_data/hwidx
 	url = https://github.com/ResearchCulture/hwidx.git
+	branch = main
