@@ -3,5 +3,9 @@
 rm -rf node_modules
 rm -rf _site
 
-npm install
-npm run build
+if ! command -v yarn &> /dev/null; then
+    npm install -g yarn
+fi
+
+yarn install
+yarn run build
