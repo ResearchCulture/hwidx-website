@@ -12,15 +12,16 @@ permalink: "/{{ pagination.items[0] }}/"
 <div>
 {%- for key, value in entity -%}
   {%- if key.startsWith('_') -%}
-    
     {# Skip internal keys #}
-
   {%- else -%}
 
     <h3>{{ key | capitalize }}:</h3>
     {%- if value is string -%}
-      <p style="margin-left: 3rem;">{{ value }}</p>
-    
+      {%- if value.startsWith("http") -%}
+        <p style="margin-left: 3rem;"><a href="{{ value }}">{{ value }}</a></p>
+      {%- else -%}
+        <p style="margin-left: 3rem;">{{ value }}</p>
+      {%- endif -%}
     {%- elif value is iterable -%}
       <div style="margin-left: 3rem;">
         {%- for line in value -%}
@@ -32,7 +33,11 @@ permalink: "/{{ pagination.items[0] }}/"
       <div style="margin-left: 3rem;">
         {%- for subkey, item in value -%}
           <h4>{{ subkey | capitalize }}:</h4>
-          <p style="margin-left: 3rem;">{{ item }}</p>
+          {%- if item.startsWith("http") -%}
+            <p style="margin-left: 3rem;"><a href="{{ item }}">{{ item }}</a></p>
+          {%- else -%}
+            <p style="margin-left: 3rem;">{{ item }}</p>
+          {%- endif -%}
         {%- endfor -%}
       </div>
     {%- endif -%}
