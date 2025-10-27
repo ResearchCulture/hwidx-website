@@ -2,7 +2,6 @@
 
 {% block content %}
 An open organization that helps create stable, consistent, and shareable identifiers for [artifacts](/what-is-an-artifact) deployed at moderate to large scales.
-We aim to align to the [DOI](https://www.doi.org/) style identifiers described in ISO 26324, but are not strictly bound by this standard.
 These identifiers make it easy to uniquely recognize and reference artifacts anywhere. Think of them as forwarding addresses for hardware documentation.
 
 [Link Rot](/what-is-link-rot) is still a problem, even when authors have the best intentions of keeping the URLs stable. Web frameworks change, pages get updated and content gets moved or updated and the addresses printed on a device drift to unusability, leaving users to guess or search for what a device is, and how it should be used.

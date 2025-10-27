@@ -7,8 +7,9 @@ const tailwindcss = require("@tailwindcss/postcss");
 const yaml = require("js-yaml");
 const { glob } = require("glob");
 
-module.exports = (eleventyConfig) => {
+const OUTPUT_PATH = "_site";
 
+module.exports = (eleventyConfig) => {
   // Preprocess Tailwind CSS before each build
   eleventyConfig.on("eleventy.before", async () => {
     const tailwindInputPath = path.resolve("src/assets/css/main.css");
@@ -29,7 +30,7 @@ module.exports = (eleventyConfig) => {
   });
   eleventyConfig.addWatchTarget("src/assets/css/**/*.css");
 
-  // Configure Nunjucks 
+  // Configure Nunjucks
   eleventyConfig.setLibrary(
     "njk",
     new Nunjucks.Environment(new Nunjucks.FileSystemLoader("src/_includes"))
@@ -39,11 +40,16 @@ module.exports = (eleventyConfig) => {
     const list = await glob("src/_data/hwidx/**/*.yml");
 
     const dict = {};
-    list.forEach( (filepath, index) => {
+    list.forEach((filepath, index) => {
       const data = yaml.load(fs.readFileSync(filepath, "utf8"));
 
-      const relPath = path.relative( path.join(eleventyConfig.dir.input, "_data"), filepath );
-      const hwidx = relPath.replace(/^hwidx\//, "").replace(/\.ya?ml$/, "").replace(/\//, ".");
+      const relPath = path.relative(
+        path.join(eleventyConfig.dir.input, "_data"),
+        filepath
+      );
+      const hwidx = relPath
+        .replace(/^hwidx\//, "")
+        .replace(/\.ya?ml$/, "");
       const hwidx_url = `https://hwidx.org/${hwidx}`;
       const hwidx_meta = `https://m.hwidx.org/${hwidx}`;
 
@@ -58,11 +64,10 @@ module.exports = (eleventyConfig) => {
 
   // Convert object to YAML string
   eleventyConfig.addFilter("toYAML", (value) => {
-
     // Remove keys prefixed with '_hwidx'
     const filtered = Object.keys(value).reduce((acc, key) => {
-      if (!key.startsWith('_hwidx')) {
-      acc[key] = value[key];
+      if (!key.startsWith("_hwidx")) {
+        acc[key] = value[key];
       }
       return acc;
     }, {});
@@ -83,8 +88,37 @@ module.exports = (eleventyConfig) => {
     eleventyConfig.setLibrary("md", mdEngine);
   };
 
+  
   // Copy static assets to the output folder
   eleventyConfig.addPassthroughCopy({ "src/assets/img": "assets/img" });
+  eleventyConfig.addPassthroughCopy({ "src/assets/fonts": "assets/fonts" });
+
+
+  // Generate our QR codes for each hwidx entity
+  eleventyConfig.on("eleventy.after", async () => {
+    const { qrCode, logoMark, logoMarkHorizontal, labelMark } = require("./mark-generator.js");
+    const hwidx = await eleventyConfig.globalData.hwidx();
+    const outputDir = path.join(OUTPUT_PATH);
+
+    // Create output directory if it doesn't exist
+    if (!fs.existsSync(outputDir)) {
+      console.log(`Creating output directory at ${outputDir}`);
+      fs.mkdirSync(outputDir, { recursive: true });
+    }
+
+    // Iterate over each entity in hwidx
+    for (const [key, entity] of Object.entries(hwidx)) {
+      const imgRoot = path.join(outputDir, `${key}/`);
+
+      await eleventyConfig.logger.log(`Generating images for ${key} in ${imgRoot}`);
+      await qrCode( path.join(imgRoot, "qr.png"), entity._hwidx, { margin: 1 } );
+      await logoMark( path.join(imgRoot, "logo-mark.png"), entity._hwidx, { margin: 1 } );
+      await logoMarkHorizontal( path.join(imgRoot, "logo-mark-horizontal.png"), entity._hwidx, { margin: 1 } );
+      await logoMarkHorizontal( path.join(imgRoot, "logo-mark-horizontal-invert.png"), entity._hwidx, { margin: 1 }, true );
+      await labelMark( path.join(imgRoot, "label-mark.png"), entity._hwidx, { margin: 1 } );
+    }
+  });
+
 
   // Eleventy configuration object
   return {
@@ -97,7 +131,7 @@ module.exports = (eleventyConfig) => {
     pathPrefix: "/",
 
     dir: {
-      output: "_site",
+      output: OUTPUT_PATH,
       input: "src",
       layouts: "_layouts",
     },
