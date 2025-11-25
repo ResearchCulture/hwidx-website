@@ -57,6 +57,11 @@ a::after {
     text-decoration: none;
 }
 
+a.nodecorate::after {
+    content: "";
+    padding: 0;
+}
+
 p:not(:last-child) {
     @apply mb-6;
 }
@@ -120,7 +125,7 @@ ul:last-child {
     @apply mb-0;
 }
 
-img{
+.content > * > img{
     @apply mb-6;
     @apply rounded-lg;
     max-width: 60%;
@@ -136,16 +141,25 @@ footer {
     @apply bg-gray-800;
     @apply text-white;
     @apply text-center;
-    @apply pt-4;
+    @apply py-4;
+    @apply items-center;
 }
 
 footer > p {
     display: inline-block;
-    @apply m-0;
-    @apply mb-2;
+    margin-bottom: none !important;
 }
 
 footer a {
     @apply text-blue-400;
     border: none;
+}
+
+footer .logo {
+    flex-shrink: 0;
+    flex-grow: 0;
+    display: block;
+    aspect-ratio: 1 / 1;
+    height: 64px;
+    width: 64px;
 }
