@@ -19,7 +19,11 @@ These identifiers make it easy to uniquely recognize and reference artifacts any
 
 ## How do I get a hwidx.org identifier?
 
-We manage the index through out [Github Repository](https://github.com/ResearchCulture/hwidx) which has more detailed instructions on requesting an identifier, but in brief simply raising a [pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests) with your information in YAML format is usually enough.
+We manage the index through our [Github Repository](https://github.com/ResearchCulture/hwidx) which has more detailed instructions on requesting an identifier, but in brief simply raising a [pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests) with your information in YAML format is usually enough.
+
+Identifiers follow the format `/organisation-id/device-id/major.minor` where organisations and devices are represented by arbitrary integer identifiers (e.g., `/123/456/1.0`), and the version is a 2-digit major/minor version number. You can also include `index.yml` files in organization or device directories to provide shared context that will be inherited by all descendant identifiers.
+
+We encourage the use of purely numeric identifiers for versions, but the standard also supports variations on this which may use additional specifiers, such as semver (1.2.3), or release formats (1.2-rc0), and others. The only expressly forbidden characters are the forward and back slashes (`/` and `\`).
 
 Once we have your pull request, one of our reviewers will either merge your identifier into the index, ask any follow up questions, or request any specific changes to comply with our identifier requirements.
 
@@ -36,13 +40,13 @@ The above design was created using [qrcodeonly.com/](https://qrcodeonly.com/) in
 ## I have a hwidx.org identifier - How do I use it?
 Identifiers are the URL you use to access the linked resource. Simply visit `hwidx.org/` with the identifier appended to be taken to the current forward URL.
 
-For example, if I have the identifier `10.100/1234` visiting the address `hwidx.org/10.100/1234` will take you to the correct URL.
+For example, if I have the identifier `/123/456/1.0` visiting the address `hwidx.org/123/456/1.0` will take you to the correct URL.
 
-We also provide a metadata record service through `m.hwidx.org` which uses the same path, in this case `m.hwidx.org/10.100/1234` which can be used as a device ['vcard'](https://en.wikipedia.org/wiki/VCard) of sorts.
+We also provide a metadata record service through `m.hwidx.org` which uses the same path, in this case `m.hwidx.org/123/456/1.0` which can be used as a device ['vcard'](https://en.wikipedia.org/wiki/VCard) of sorts.
 
 ## Example items in the index
 
-<table>
+<table class="w-90vh">
 <thead>
     <tr>
         <th>hwidx</th>
