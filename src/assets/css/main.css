@@ -25,6 +25,10 @@ h3 {
     @apply text-2xl;
 }
 
+h4 {
+    @apply mb-0;
+}
+
 .big-title {
     @apply text-5xl;
     @apply font-extrabold;

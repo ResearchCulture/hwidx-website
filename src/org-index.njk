@@ -1,0 +1,71 @@
+---
+pagination:
+  data: hwidxIndex.orgList
+  size: 1
+  alias: dir
+permalink: "/{{ dir.path }}/index.html"
+eleventyExcludeFromCollections: true
+---
+{%- extends "base.njk" -%}
+
+{%- block content -%}
+<div class="mb-10">
+  <h1><strong>{{ dir.data.org.name if dir.data.org else 'Organization' }}</strong></h1>
+  {%- if dir.data.group -%}
+    <h2 class="text-xl mt-4">{{ dir.data.group.name }}</h2>
+  {%- endif -%}
+</div>
+
+{%- if dir.data.org -%}
+  <div class="mb-8">
+    <h3>Organization</h3>
+    <p class="ml-8">
+      {%- if dir.data.org.url -%}
+        <a href="{{ dir.data.org.url }}">{{ dir.data.org.name }}</a>
+      {%- else -%}
+        {{ dir.data.org.name }}
+      {%- endif -%}
+    </p>
+  </div>
+{%- endif -%}
+
+{%- if dir.data.group -%}
+  <div class="mb-8">
+    <h3>Group</h3>
+    <p class="ml-8">
+      {%- if dir.data.group.url -%}
+        <a href="{{ dir.data.group.url }}">{{ dir.data.group.name }}</a>
+      {%- else -%}
+        {{ dir.data.group.name }}
+      {%- endif -%}
+    </p>
+  </div>
+{%- endif -%}
+
+{%- if dir.children and dir.children.length -%}
+  <div class="mb-8">
+    <h3>Devices</h3>
+    <ul class="ml-8 list-disc">
+      {%- for child in dir.children -%}
+        <li>
+          <a href="{{ child.url }}">
+            {%- if child.deviceName -%}
+              {{ child.deviceName }}
+            {%- else -%}
+              Device {{ child.slug }}
+            {%- endif -%}
+          </a>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+{%- else -%}
+  <p>No devices found.</p>
+{%- endif -%}
+
+<div class="yaml-record mt-8">
+  <h3>YAML Record</h3>
+  <tt><pre>{{ dir.data | toYAML }}</pre></tt>
+</div>
+
+{%- endblock content -%}

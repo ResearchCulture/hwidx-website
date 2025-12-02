@@ -36,31 +36,8 @@ module.exports = (eleventyConfig) => {
     new Nunjucks.Environment(new Nunjucks.FileSystemLoader("src/_includes"))
   );
 
-  eleventyConfig.addGlobalData("hwidx", async (collectionsApi) => {
-    const list = await glob("src/_data/hwidx/**/*.yml");
-
-    const dict = {};
-    list.forEach((filepath, index) => {
-      const data = yaml.load(fs.readFileSync(filepath, "utf8"));
-
-      const relPath = path.relative(
-        path.join(eleventyConfig.dir.input, "_data"),
-        filepath
-      );
-      const hwidx = relPath
-        .replace(/^hwidx\//, "")
-        .replace(/\.ya?ml$/, "");
-      const hwidx_url = `https://hwidx.org/${hwidx}`;
-      const hwidx_meta = `https://m.hwidx.org/${hwidx}`;
-
-      data._hwidx_meta = hwidx_meta;
-      data._hwidx = hwidx_url;
-      data._hwidx_key = hwidx;
-
-      dict[hwidx] = data;
-    });
-    return dict;
-  });
+  // hwidx data is now loaded automatically from src/_data/hwidx.js
+  // which handles cascading YAML merges
 
   // Convert object to YAML string
   eleventyConfig.addFilter("toYAML", (value) => {
@@ -97,7 +74,7 @@ module.exports = (eleventyConfig) => {
   // Generate our QR codes for each hwidx entity
   eleventyConfig.on("eleventy.after", async () => {
     const { qrCode, logoMark, logoMarkHorizontal, labelMark } = require("./mark-generator.js");
-    const hwidx = await eleventyConfig.globalData.hwidx();
+    const hwidx = await require("./src/_data/hwidx.js")();
     const outputDir = path.join(OUTPUT_PATH);
 
     // Create output directory if it doesn't exist

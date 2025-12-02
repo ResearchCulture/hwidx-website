@@ -1,0 +1,41 @@
+---
+pagination:
+  data: hwidxIndex.otherList
+  size: 1
+  alias: dir
+permalink: "/{{ dir.path }}/index.html"
+---
+{%- extends "base.njk" -%}
+
+{%- block content -%}
+<div class="mb-10">
+  <h1><strong>hwidx.org/{{ dir.path }}</strong></h1>
+</div>
+
+{%- if dir.data and (dir.data | length) -%}
+  <h3>Directory Data</h3>
+  <div class="yaml-record"><tt><pre>{{ dir.data | toYAML }}</pre></tt></div>
+{%- endif -%}
+
+{%- if dir.children and dir.children.length -%}
+  <h3>Index</h3>
+  <ul class="ml-8 list-disc">
+    {%- for child in dir.children -%}
+      <li>
+        {%- if child.title -%}
+        <a href="{{ child.url }}">{{ child.title }} version {{ child.slug }}</a>
+        {%- else -%}
+        <a href="{{ child.url }}">{{ child.slug }}</a>
+        {%- endif -%}
+      </li>
+    {%- endfor -%}
+  </ul>
+{%- else -%}
+  <p>No entries found.</p>
+{%- endif -%}
+
+{%- if dir.parentPath -%}
+  <p class="mt-8"><a href="{{ dir.parentUrl }}">⬅ Up to {{ dir.parentPath }}</a></p>
+{%- endif -%}
+
+{%- endblock content -%}

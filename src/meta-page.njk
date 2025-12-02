@@ -20,7 +20,9 @@ permalink: "/{{ pagination.items[0] }}/"
   {%- else -%}
 
     <h3>{{ key | capitalize }}:</h3>
-    {%- if value is string -%}
+    {%- if value is number -%}
+      <p style="margin-left: 3rem;">{{ value }}</p>
+    {%- elif value is string -%}
       {%- if value.startsWith("http") -%}
         <p style="margin-left: 3rem;"><a href="{{ value }}">{{ value }}</a></p>
       {%- else -%}
@@ -54,23 +56,25 @@ permalink: "/{{ pagination.items[0] }}/"
 
 <div>
   <h3>Bare QR Code:</h3>
-  <img src="qr.png" alt="The hwidx.org URL as a QR code" style="width: 200px;" />
+  <img src="qr.png" alt="The hwidx.org URL as a QR code" style="width: 200px; margin-inline: inherit; margin-left: 2em;" />
 </div>
 <div>
   <h3>LogoMark:</h3>
-  <img src="logo-mark.png" alt="The hwidx.org URL as a QR code with logo mark" style="width: 200px;" />
+  <img src="logo-mark.png" alt="The hwidx.org URL as a QR code with logo mark" style="width: 200px; margin-inline: inherit; margin-left: 2em;" />
 </div>
 <div>
   <h3>LogoMark (Horizontal):</h3>
-  <div class="flex">
+  <div class="flex gap-3 mb-2" style="margin-left: 2em;">
     <img src="logo-mark-horizontal.png" alt="The hwidx.org URL as a QR code with logo mark (horizontal)" style="width: 200px;" />
     <img src="logo-mark-horizontal-invert.png" alt="The hwidx.org URL as a QR code with logo mark (horizontal, inverted)" style="width: 200px;" />
   </div>
 </div>
 <div>
   <h3>LabelMark:</h3>
-  <img src="label-mark.png" alt="The hwidx.org URL as a QR code with label mark" style="width: 200px;" />
+  <img src="label-mark.png" alt="The hwidx.org URL as a QR code with label mark" style="width: 200px; margin-inline: inherit; margin-left: 2em;" />
 </div>
+
+<p class="mt-8"><a href="../">⬅ Back to version list</a></p>
 
 <div class="yaml-record">
   <h3>YAML Record</h3>

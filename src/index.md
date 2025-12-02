@@ -55,7 +55,7 @@ We also provide a metadata record service through `m.hwidx.org` which uses the s
 {%- for key, entity in hwidx | dictsort -%}
 <tr>
     <td>
-        <a href="/{{ entity._hwidx_key }}">{{ entity._hwidx }}</a>
+        <a href="/{{ entity._hwidx_key }}">/{{ entity._hwidx_key }}</a>
     </td>
     <td>{{ entity.name }}</td>
     <td>
