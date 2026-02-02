@@ -48,6 +48,10 @@ h4 {
     padding: 2rem;
 }
 
+.content.wide {
+    max-width: 90rem;
+}
+
 a {
     color: blue;
     border-bottom: 1px solid blue;
@@ -66,8 +70,36 @@ a.nodecorate::after {
     padding: 0;
 }
 
+a.no-arrow::after {
+    content: "";
+    padding: 0;
+}
+
+a.btn-active {
+    @apply font-bold;
+}
+
 p:not(:last-child) {
     @apply mb-6;
+}
+
+.line-height-image {
+    height: 2rem;
+    width: auto;
+}
+
+a.button {
+    @apply bg-blue-500;
+    @apply text-white;
+    @apply px-4;
+    @apply py-2;
+    @apply rounded;
+    @apply no-underline;
+    border: none !important;
+}
+
+a.button:hover {
+    @apply bg-blue-600;
 }
 
 blockquote {

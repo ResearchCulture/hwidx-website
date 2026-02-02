@@ -78,6 +78,7 @@ module.exports = async function () {
           mergedIndex = { ...mergedIndex, ...idxYaml };
         } catch (_) {
           // ignore YAML parse errors for index files
+          Console.warn(`Warning: Failed to parse index.yml at ${indexPath}`);
         }
       }
     }
@@ -92,11 +93,26 @@ module.exports = async function () {
   const deviceList = list.filter(d => d.depth === 2);
   const otherList = list.filter(d => d.depth > 2);
   
+  const indexMap = Object.fromEntries(Array.from(dirMap.entries()).map(([k, v]) => [k, Array.from(v)]));
+  const semverList = deviceList.map(dir => {
+    const coerce = require("semver/functions/coerce");
+    const gt = require("semver/functions/gt");
+
+    dir.children = dir.children.map( dev => {
+      dev.semver = coerce( dev.slug );
+      return dev;
+    } )
+    .sort( (a,b) => gt(a.semver, b.semver) ? -1 : 1 );
+
+    return dir;
+  });
+
   return { 
-    map: Object.fromEntries(Array.from(dirMap.entries()).map(([k, v]) => [k, Array.from(v)])), 
+    map: indexMap, 
     list,
     orgList,
     deviceList,
-    otherList
+    otherList,
+    semverList,
   };
 };

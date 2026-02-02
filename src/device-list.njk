@@ -1,0 +1,90 @@
+---
+pagination:
+  data: hwidx
+  reverse: true
+  size: 50
+permalink: "{% if pagination.pageNumber == 0 %}/catalog/{% else %}/catalog/{{ pagination.pageNumber + 1 }}/{% endif %}"
+---
+
+{%- extends "wide.njk" -%}
+
+{%- block content -%}
+<div class="mb-10">
+  <h1><strong>hwidx.org Device List</strong></h1>
+</div>
+
+<div>
+    <table class="w-full">
+        <thead>
+            <tr>
+                <th class="text-left text-2xl">Title</th>
+                <th class="text-left text-2xl">Device</th>
+                <th class="text-left text-2xl">Organization</th>
+                <th class="text-left text-2xl">Group</th>
+            </tr>
+        </thead>
+        <tbody>
+            {%- for item in pagination.items -%}
+            {%- set entity = hwidx[item] -%}
+            <tr>
+                <td class="font-bold">
+                {%- if entity.name -%}
+                    {{ entity.name }}
+                {%- else -%}
+                    (No title)
+                {%- endif -%}
+                </td>
+                <td>
+                    <a href="/{{ item }}/" class="no-arrow">/{{ item }}</a>
+                </td>
+                <td>
+                {%- if entity.org -%}
+                    {%- if entity.org.url -%}
+                    <a href="{{ entity.org.url }}">{{ entity.org.name }}</a>
+                    {%- else -%}
+                    {{ entity.org.name }}
+                    {%- endif -%}
+                {%- else -%}
+                    (No organization)
+                {%- endif -%}
+                </td>
+                <td>
+                {%- if entity.group -%}
+                    {%- if entity.group.url -%}
+                    <a href="{{ entity.group.url }}">{{ entity.group.name }}</a>
+                    {%- else -%}
+                    {{ entity.group.name }}
+                    {%- endif -%}
+                {%- else -%}
+                    (No group)
+                {%- endif -%}
+                </td>
+            </tr>
+            {%- endfor -%}
+        </tbody>
+    </table>
+</div>
+
+<div class="pagination mt-10 flex justify-center items-center">
+    {%- if pagination.href.previous -%}
+    <a href="{{ pagination.href.previous }}" class="btn btn-primary mr-4 no-arrow">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 inline-block">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+        </svg> Previous
+    </a>
+    {%- endif -%}
+
+    {%- for pageNum in range(0, pagination.pages | length) -%}
+        <a href="{{ pagination.href.all[pageNum] }}" class="btn no-arrow {% if pageNum == pagination.pageNumber %}btn-active{% else %}btn-secondary{% endif %} mx-1">{{ pageNum + 1 }}</a>
+    {%- endfor -%}
+
+    {%- if pagination.href.next -%}
+    <a href="{{ pagination.href.next }}" class="btn btn-primary no-arrow ml-4">
+        Next <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 inline-block">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+        </svg>
+    </a>
+    {%- endif -%}
+
+</div>
+{%- endblock content -%}

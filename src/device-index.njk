@@ -1,6 +1,6 @@
 ---
 pagination:
-  data: hwidxIndex.deviceList
+  data: hwidxIndex.semverList
   size: 1
   alias: dir
 permalink: "/{{ dir.path }}/index.html"
@@ -30,6 +30,14 @@ eleventyExcludeFromCollections: true
 </div>
 
 {%- if dir.children and dir.children.length -%}
+
+  {%- if dir.children[0] -%}
+  <div class="mb-8">
+    <h3>Latest Version: {{ dir.children[0].deviceName }} (v{{ dir.children[0].slug }})</h3>
+    <p>Parsed as semantic version: {{ dir.children[0].semver.version }}</p>
+  </div>
+  {%- endif -%}
+
   <div class="mb-8">
     <h3>Versions</h3>
     <ul class="ml-8 list-disc">

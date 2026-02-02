@@ -6,6 +6,10 @@ These identifiers make it easy to uniquely recognize and reference artifacts any
 
 [Link Rot](/what-is-link-rot) is still a problem, even when authors have the best intentions of keeping the URLs stable. Web frameworks change, pages get updated and content gets moved or updated and the addresses printed on a device drift to unusability, leaving users to guess or search for what a device is, and how it should be used.
 
+<div class="w-full flex justify-center">
+    <a href="/catalog" class="button">The Device Catalog</a>
+</div>
+
 ## Features
 
 **Single**
@@ -44,45 +48,12 @@ For example, if I have the identifier `/123/456/1.0` visiting the address `hwidx
 
 We also provide a metadata record service through `m.hwidx.org` which uses the same path, in this case `m.hwidx.org/123/456/1.0` which can be used as a device ['vcard'](https://en.wikipedia.org/wiki/VCard) of sorts.
 
-## Example items in the index
+## Artifacts in the Index
 
-<table class="w-90vh">
-<thead>
-    <tr>
-        <th>hwidx</th>
-        <th>Title / Name</th>
-        <th>Organisation</th>
-        <th>Group</th>
-    </tr>
-</thead>
-<tbody>
-{%- for key, entity in hwidx | dictsort -%}
-<tr>
-    <td>
-        <a href="/{{ entity._hwidx_key }}">/{{ entity._hwidx_key }}</a>
-    </td>
-    <td>{{ entity.name }}</td>
-    <td>
-        {%- if entity.org and entity.org.name and entity.org.url -%}
-            <a href={{ entity.org.url }}>{{ entity.org.name }}</a>
-        {%- elif entity.org and entity.org.name -%}
-            {{ entity.org.name }}
-        {%- elif entity.org and entity.org.url -%}
-            <a href={{ entity.org.url }}>{{ entity.org.url }}</a>
-        {%- endif -%}
-    </td>
-    <td>
-        {%- if entity.group and entity.group.name and entity.group.url -%}
-            <a href={{ entity.group.url }}>{{ entity.group.name }}</a>
-        {%- elif entity.group and entity.group.name -%}
-            {{ entity.group.name }}
-        {%- elif entity.group and entity.group.url -%}
-            <a href={{ entity.group.url }}>{{ entity.group.url }}</a>
-        {%- endif -%}
-    </td>
-</tr>
-{%- endfor -%}
-</tbody>
-</table>
+To view the full catalog of devices in the index, click the button below.
+
+<div class="w-full flex justify-center">
+    <a href="/catalog" class="button">The Device Catalog</a>
+</div>
 
 {% endblock content %}
