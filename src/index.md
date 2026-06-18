@@ -6,10 +6,6 @@ These identifiers make it easy to uniquely recognize and reference artifacts any
 
 [Link Rot](/what-is-link-rot) is still a problem, even when authors have the best intentions of keeping the URLs stable. Web frameworks change, pages get updated and content gets moved or updated and the addresses printed on a device drift to unusability, leaving users to guess or search for what a device is, and how it should be used.
 
-<div class="w-full flex justify-center">
-    <a href="/catalog" class="button">The Device Catalog</a>
-</div>
-
 ## Features
 
 **Single**

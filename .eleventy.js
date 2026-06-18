@@ -6,8 +6,44 @@ const postcss = require("postcss");
 const tailwindcss = require("@tailwindcss/postcss");
 const yaml = require("js-yaml");
 const { glob } = require("glob");
+const esbuild = require("esbuild");
 
 const OUTPUT_PATH = "_site";
+
+const FORCE_QR_REBUILD = process.env.FORCE_QR_REBUILD === "true";
+const QR_BATCH_SIZE = process.env.QR_BATCH_SIZE ? parseInt(process.env.QR_BATCH_SIZE, 10) : 8;
+
+async function processBatch(batch, generateFn) {
+  return Promise.all(batch.map(generateFn));
+}
+
+async function processBatched(items, generateFn, batchSize = QR_BATCH_SIZE) {
+  for (let i = 0; i < items.length; i += batchSize) {
+    const batch = items.slice(i, i + batchSize);
+    await processBatch(batch, generateFn);
+  }
+}
+
+async function bundleJavaScript() {
+  const entryPoints = await glob("src/assets/js/**/*.js", { nodir: true });
+
+  if (entryPoints.length === 0) {
+    return;
+  }
+
+  await esbuild.build({
+    entryPoints,
+    outdir: path.join(OUTPUT_PATH, "assets/js"),
+    bundle: true,
+    format: "esm",
+    platform: "browser",
+    target: ["es2020"],
+    sourcemap: true,
+    logLevel: "info",
+    entryNames: "[dir]/[name]",
+    outbase: "src/assets/js",
+  });
+}
 
 module.exports = (eleventyConfig) => {
   // Preprocess Tailwind CSS before each build
@@ -27,8 +63,11 @@ module.exports = (eleventyConfig) => {
     });
 
     fs.writeFileSync(tailwindOutputPath, result.css);
+
+    await bundleJavaScript();
   });
   eleventyConfig.addWatchTarget("src/assets/css/**/*.css");
+  eleventyConfig.addWatchTarget("src/assets/js/**/*.js");
 
   // Configure Nunjucks
   eleventyConfig.setLibrary(
@@ -83,17 +122,42 @@ module.exports = (eleventyConfig) => {
       fs.mkdirSync(outputDir, { recursive: true });
     }
 
-    // Iterate over each entity in hwidx
-    for (const [key, entity] of Object.entries(hwidx)) {
+    eleventyConfig.logger.log(`Generating QR codes and marks for ${Object.keys(hwidx).length} entities...`);
+    eleventyConfig.logger.log(`Batch size: ${QR_BATCH_SIZE}`);
+    eleventyConfig.logger.log(`Force rebuild? ${FORCE_QR_REBUILD}`);
+
+    const entities = Object.entries(hwidx);
+    await processBatched(entities, async ([key, entity]) => {
       const imgRoot = path.join(outputDir, `${key}/`);
 
       await eleventyConfig.logger.log(`Generating images for ${key} in ${imgRoot}`);
-      await qrCode( path.join(imgRoot, "qr.png"), entity._hwidx, { margin: 1 } );
-      await logoMark( path.join(imgRoot, "logo-mark.png"), entity._hwidx, { margin: 1 } );
-      await logoMarkHorizontal( path.join(imgRoot, "logo-mark-horizontal.png"), entity._hwidx, { margin: 1 } );
-      await logoMarkHorizontal( path.join(imgRoot, "logo-mark-horizontal-invert.png"), entity._hwidx, { margin: 1 }, true );
-      await labelMark( path.join(imgRoot, "label-mark.png"), entity._hwidx, { margin: 1 } );
-    }
+      
+      if( !fs.existsSync(path.join(imgRoot, "qr.png")) || FORCE_QR_REBUILD )
+        await qrCode(path.join(imgRoot, "qr.png"), entity._hwidx, { margin: 1 });
+      else
+        await eleventyConfig.logger.log(`Skipping qr.png for ${key}, already exists.`);
+      
+      if( !fs.existsSync(path.join(imgRoot, "logo-mark.png")) || FORCE_QR_REBUILD )
+        await logoMark(path.join(imgRoot, "logo-mark.png"), entity._hwidx, { margin: 1 });
+      else
+        await eleventyConfig.logger.log(`Skipping logo-mark.png for ${key}, already exists.`);
+
+      if( !fs.existsSync(path.join(imgRoot, "logo-mark-horizontal.png")) || FORCE_QR_REBUILD )
+        await logoMarkHorizontal(path.join(imgRoot, "logo-mark-horizontal.png"), entity._hwidx, { margin: 1 });
+      else
+        await eleventyConfig.logger.log(`Skipping logo-mark-horizontal.png for ${key}, already exists.`);
+
+      if( !fs.existsSync(path.join(imgRoot, "logo-mark-horizontal-invert.png")) || FORCE_QR_REBUILD )
+        await logoMarkHorizontal(path.join(imgRoot, "logo-mark-horizontal-invert.png"), entity._hwidx, { margin: 1 }, true);
+      else
+        await eleventyConfig.logger.log(`Skipping logo-mark-horizontal-invert.png for ${key}, already exists.`);
+
+      if( !fs.existsSync(path.join(imgRoot, "label-mark.png")) || FORCE_QR_REBUILD )
+        await labelMark(path.join(imgRoot, "label-mark.png"), entity._hwidx, { margin: 1 });
+      else
+        await eleventyConfig.logger.log(`Skipping label-mark.png for ${key}, already exists.`);
+
+    }, QR_BATCH_SIZE);
   });
 
 

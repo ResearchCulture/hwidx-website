@@ -92,13 +92,14 @@ p:not(:last-child) {
 }
 
 a.button {
-    @apply bg-blue-500;
-    @apply text-white;
-    @apply px-4;
-    @apply py-2;
-    @apply rounded;
-    @apply no-underline;
-    border: none !important;
+    background-color: var(--color-blue-500);
+    color: var(--color-white);
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    border-radius: 0.25rem;
+    text-decoration: none;
 }
 
 a.button:hover {
@@ -132,9 +133,6 @@ header {
     @apply bg-gray-800;
     @apply text-white;
     @apply mb-4;
-    padding-top: 16px;
-    padding-left: 16px;
-    padding-right: 16px;
     overflow: hidden;
 }
 
@@ -142,6 +140,9 @@ header > h1 {
     @apply m-0;
     @apply p-0;
     line-height: 1;
+    padding-top: 16px;
+    padding-left: 16px;
+    padding-right: 16px;
 }
 
 .yaml-record {
@@ -201,4 +202,14 @@ footer .logo {
     aspect-ratio: 1 / 1;
     height: 64px;
     width: 64px;
+}
+
+.bg-striped {
+    background-image: repeating-linear-gradient(
+        45deg,
+        #f3f4f6,
+        #f3f4f6 10px,
+        #e5e7eb 10px,
+        #e5e7eb 20px
+    );
 }

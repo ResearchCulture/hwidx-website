@@ -8,6 +8,10 @@
 <body>
     <header>
         <h1 class="big-title"><a href="/">hwidx.org - The Hardware Index</a></h1>
+        <div class="w-full flex gap-3 justify-center bg-gray-300 shadow border-white p-2 m-0">
+            <a href="/catalog" class="button">The Device Catalog</a>
+            <a href="/make-a-qr-code" class="button bg-white border border-gray-500">Make a QR Code</a>
+        </div>
     </header>
     {% block wrapper %}
     Missing wrapper content...
@@ -19,6 +23,8 @@
         <div>Funded by <a href="https://wellcome.org/" target="_blank">Wellcome</a></div>
         <a class="nodecorate" href="https://wellcome.org/" target="_blank"><img class="logo" src="/assets/img/wellcome-logo-white.png" alt="Wellcome Logo" /></a>
     </footer>
+    {% block scripts %}
+    {% endblock scripts %}
     <!-- 100% privacy-first analytics -->
     <script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
 </body>
