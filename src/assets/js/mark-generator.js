@@ -4,6 +4,7 @@ import {
     createLogoMarkHorizontalCanvas,
     createURLLabelCanvas,
     renderQRCodeToCanvas,
+    createSlimQRCanvas
 } from "./mark-types.js";
 
 function createBrowserCanvas(width, height) {
@@ -145,6 +146,9 @@ export function attachLiveQRGenerator(root = document) {
                     break;
                 case "label-mark":
                     renderedCanvas = createURLLabelCanvas(createBrowserCanvas, value);
+                    break;
+                case "slim-qr":
+                    renderedCanvas = await createSlimQRCanvas(createBrowserCanvas, value);
                     break;
                 case "bare-qr":
                 default:

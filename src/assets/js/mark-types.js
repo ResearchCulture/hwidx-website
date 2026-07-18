@@ -163,6 +163,78 @@ export async function createLogoMarkHorizontalCanvas(createCanvas, url, options 
 	return finalCanvas;
 }
 
+export async function createSlimQRCanvas(
+	createCanvas,
+	url,
+	options = {}
+) {
+	const qrOptions = commonQROptions(options);
+
+	const qrSize = 600;
+	const topPadding = 40;
+	const labelHeight = 150;
+	const cornerRadius = 32;
+
+	const totalWidth = qrSize;
+	const totalHeight = topPadding + qrSize + labelHeight;
+
+	const qrCanvas = createCanvas(qrSize, qrSize);
+	await QRCode.toCanvas(qrCanvas, url, {
+		...qrOptions,
+		width: qrSize,
+		margin: 0, // remove the QR's own quiet zone
+	});
+
+	const finalCanvas = createCanvas(totalWidth, totalHeight);
+	const ctx = finalCanvas.getContext("2d");
+
+	// White rounded card
+	ctx.fillStyle = "white";
+	roundedRectPath(ctx, 0, 0, totalWidth, totalHeight, cornerRadius);
+	ctx.fill();
+
+	// QR spans the full width
+	ctx.drawImage(qrCanvas, 0, topPadding);
+
+	// Divider
+	const textStartY = topPadding + qrSize + 10;
+
+	const shortURL = url.replace("https://hwidx.org", "");
+
+	ctx.fillStyle = "black";
+	ctx.textAlign = "center";
+	ctx.textBaseline = "middle";
+
+  ctx.font = `bold 60px ${DEFAULT_FONT}`;
+	for (let i = 0; i < 2; i++) {
+		// Domain
+		ctx.fillText(
+			"hwidx.org",
+			(totalWidth / 2) + i,
+			textStartY + 45 + i
+		);
+		ctx.fillText(
+			"hwidx.org",
+			(totalWidth / 2) - i,
+			textStartY + 45 - i
+		);
+
+		// Path
+		ctx.fillText(
+			shortURL,
+			(totalWidth / 2) + i,
+			textStartY + 95 + i
+		);
+
+		ctx.fillText(
+			shortURL,
+			(totalWidth / 2) - i,
+			textStartY + 95 - i
+		);
+	}
+	return finalCanvas;
+}
+
 export function createURLLabelCanvas(createCanvas, url, options = {}) {
 	const shortURL = url.replace("https://", "");
 	const padding = options.padding ?? 100;
@@ -198,4 +270,5 @@ export default {
 	createLogoMarkCanvas,
 	createLogoMarkHorizontalCanvas,
 	createURLLabelCanvas,
+	createSlimQRCanvas
 };
