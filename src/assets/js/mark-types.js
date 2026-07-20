@@ -172,8 +172,8 @@ export async function createSlimQRCanvas(
 
 	const qrSize = 600;
 	const topPadding = 40;
-	const labelHeight = 150;
-	const cornerRadius = 32;
+	const labelHeight = 200;
+	const cornerRadius = 50;
 
 	const totalWidth = qrSize;
 	const totalHeight = topPadding + qrSize + labelHeight;
@@ -197,15 +197,15 @@ export async function createSlimQRCanvas(
 	ctx.drawImage(qrCanvas, 0, topPadding);
 
 	// Divider
-	const textStartY = topPadding + qrSize + 10;
-
+	const textStartY = topPadding + qrSize + 14;
 	const shortURL = url.replace("https://hwidx.org", "");
 
 	ctx.fillStyle = "black";
 	ctx.textAlign = "center";
 	ctx.textBaseline = "middle";
 
-  ctx.font = `bold 60px ${DEFAULT_FONT}`;
+ 	// Extra emboldening by writing multiple times with slight x-y offset:
+	ctx.font = `bold 75px ${DEFAULT_FONT}`;
 	for (let i = 0; i < 2; i++) {
 		// Domain
 		ctx.fillText(
@@ -223,13 +223,13 @@ export async function createSlimQRCanvas(
 		ctx.fillText(
 			shortURL,
 			(totalWidth / 2) + i,
-			textStartY + 95 + i
+			textStartY + 130 + i
 		);
 
 		ctx.fillText(
 			shortURL,
 			(totalWidth / 2) - i,
-			textStartY + 95 - i
+			textStartY + 130 - i
 		);
 	}
 	return finalCanvas;
