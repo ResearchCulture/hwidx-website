@@ -206,7 +206,7 @@ export async function createSlimQRCanvas(
 
 	ctx.font = `bold 75px ${DEFAULT_FONT}`;
 
-		// Domain
+	// Domain
 	ctx.fillText(
 		"hwidx.org",
 		(totalWidth / 2),
