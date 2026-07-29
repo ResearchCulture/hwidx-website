@@ -204,34 +204,33 @@ export async function createSlimQRCanvas(
 	ctx.textAlign = "center";
 	ctx.textBaseline = "middle";
 
- 	// Extra emboldening by writing multiple times with slight x-y offset:
 	ctx.font = `bold 75px ${DEFAULT_FONT}`;
-	for (let i = 0; i < 2; i++) {
+
 		// Domain
-		ctx.fillText(
-			"hwidx.org",
-			(totalWidth / 2) + i,
-			textStartY + 45 + i
-		);
-		ctx.fillText(
-			"hwidx.org",
-			(totalWidth / 2) - i,
-			textStartY + 45 - i
-		);
+	ctx.fillText(
+		"hwidx.org",
+		(totalWidth / 2),
+		textStartY + 45
+	);
 
-		// Path
-		ctx.fillText(
-			shortURL,
-			(totalWidth / 2) + i,
-			textStartY + 130 + i
-		);
+	ctx.fillText(
+		"hwidx.org",
+		(totalWidth / 2),
+		textStartY + 45  
+	);
 
-		ctx.fillText(
-			shortURL,
-			(totalWidth / 2) - i,
-			textStartY + 130 - i
-		);
-	}
+	// Path
+	ctx.fillText(
+		shortURL,
+		(totalWidth / 2),
+		textStartY + 130
+	);
+
+	ctx.fillText(
+		shortURL,
+		(totalWidth / 2),
+		textStartY + 130  
+	);
 	return finalCanvas;
 }
 
