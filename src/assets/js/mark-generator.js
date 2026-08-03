@@ -52,6 +52,22 @@ export function attachLiveQRGenerator(root = document) {
     const status = form.querySelector("[data-qr-status]");
     const mark_type = form.querySelector("[data-qr-output-style]");
 
+    // Initial pull from any/all url parameters to pre-fill the form
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('o')) {
+        input_org.value = urlParams.get('o') ?? '';
+    }
+    if (urlParams.has('d')) {
+        input_device.value = urlParams.get('d') ?? '';
+    }
+    if (urlParams.has('v')) {
+        input_version.value = urlParams.get('v') ?? '';
+    }
+    if (mark_type instanceof HTMLSelectElement) {
+        const initialMarkType = urlParams.get('type') ?? urlParams.get('t') ?? 'bare-qr';
+        mark_type.value = initialMarkType;
+    }
+
     if (!(input_org instanceof HTMLInputElement) || !(input_device instanceof HTMLInputElement) || !(input_version instanceof HTMLInputElement) || !(canvas instanceof HTMLCanvasElement)) {
         return;
     }
@@ -79,6 +95,27 @@ export function attachLiveQRGenerator(root = document) {
         const org = input_org.value.trim();
         const device = input_device.value.trim();
         const version = input_version.value.trim();
+
+        const urlParams = new URLSearchParams(window.location.search);
+        if( urlParams.get('type') != markType ) {
+            urlParams.set('type', markType);
+            window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
+        }
+
+        if( urlParams.get('o') != org && org.length > 0 ) {
+            urlParams.set('o', org);
+            window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
+        }
+
+        if( urlParams.get('d') != device && device.length > 0 ) {
+            urlParams.set('d', device);
+            window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
+        }
+
+        if( urlParams.get('v') != version && version.length > 0 ) {
+            urlParams.set('v', version);
+            window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
+        }
 
         if (!Number.isSafeInteger(parseInt(org))) {
             if (status) {
