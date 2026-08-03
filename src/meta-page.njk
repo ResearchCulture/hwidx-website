@@ -52,26 +52,11 @@ permalink: "/{{ pagination.items[0] }}/"
 {% endfor %}
 </div>
 
-<br /><br /><br />
+<br />
 
 <div>
-  <h3>Bare QR Code:</h3>
-  <img src="qr.png" alt="The hwidx.org URL as a QR code" style="width: 200px; margin-inline: inherit; margin-left: 2em;" />
-</div>
-<div>
-  <h3>LogoMark:</h3>
-  <img src="logo-mark.png" alt="The hwidx.org URL as a QR code with logo mark" style="width: 200px; margin-inline: inherit; margin-left: 2em;" />
-</div>
-<div>
-  <h3>LogoMark (Horizontal):</h3>
-  <div class="flex gap-3 mb-2" style="margin-left: 2em;">
-    <img src="logo-mark-horizontal.png" alt="The hwidx.org URL as a QR code with logo mark (horizontal)" style="width: 200px;" />
-    <img src="logo-mark-horizontal-invert.png" alt="The hwidx.org URL as a QR code with logo mark (horizontal, inverted)" style="width: 200px;" />
-  </div>
-</div>
-<div>
-  <h3>LabelMark:</h3>
-  <img src="label-mark.png" alt="The hwidx.org URL as a QR code with label mark" style="width: 200px; margin-inline: inherit; margin-left: 2em;" />
+  <h3>QR Code:</h3>
+  <p style="margin-left: 3rem;"><a href="/make-a-qr-code/?type=bare-qr&o={{ pagination.items[0].split('/')[0] }}&d={{ pagination.items[0].split('/')[1] }}&v={{ pagination.items[0].split('/')[2] }}">QR Code Generator</a></p>
 </div>
 
 <p class="mt-8"><a href="../">⬅ Back to version list</a></p>

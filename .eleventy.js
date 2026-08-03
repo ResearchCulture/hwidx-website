@@ -126,7 +126,7 @@ module.exports = (eleventyConfig) => {
     eleventyConfig.logger.log(`Batch size: ${QR_BATCH_SIZE}`);
     eleventyConfig.logger.log(`Force rebuild? ${FORCE_QR_REBUILD}`);
 
-    const entities = Object.entries(hwidx);
+    /*const entities = Object.entries(hwidx);
     await processBatched(entities, async ([key, entity]) => {
       const imgRoot = path.join(outputDir, `${key}/`);
 
@@ -157,7 +157,7 @@ module.exports = (eleventyConfig) => {
       else
         await eleventyConfig.logger.log(`Skipping label-mark.png for ${key}, already exists.`);
 
-    }, QR_BATCH_SIZE);
+    }, QR_BATCH_SIZE);*/
   });
 
 
