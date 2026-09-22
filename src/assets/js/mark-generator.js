@@ -3,6 +3,7 @@ import {
     createLogoMarkCanvas,
     createLogoMarkHorizontalCanvas,
     createURLLabelCanvas,
+    loadMarkFont,
     renderQRCodeToCanvas,
     createSlimQRCanvas
 } from "./mark-types.js";
@@ -169,6 +170,8 @@ export function attachLiveQRGenerator(root = document) {
         }
 
         try {
+            await loadMarkFont();
+
             let renderedCanvas;
 
             switch (markType) {

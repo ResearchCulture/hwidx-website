@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+@font-face {
+    font-family: "Fredoka One";
+    src: url("/assets/fonts/FredokaOne-Regular.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+    font-display: block;
+}
+
 @theme {
   /* This makes Tailwind utilities available for @apply */
 }

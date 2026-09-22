@@ -1,6 +1,15 @@
 import QRCode from "qrcode";
 
 const DEFAULT_FONT = '"Fredoka One", sans-serif';
+const DEFAULT_FONT_LOAD = '700 90px "Fredoka One"';
+
+export async function loadMarkFont() {
+	if (typeof document === "undefined" || !document.fonts) {
+		return;
+	}
+
+	await document.fonts.load(DEFAULT_FONT_LOAD, "hwidx.org");
+}
 
 export function commonQROptions(options = {}) {
 	return {
