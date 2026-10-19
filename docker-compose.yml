@@ -1,9 +1,14 @@
 services:
-  node-app-builder:
-    platform: linux/amd64
+  hwidx-website:
     build: .
-    environment:
-      - URL=${URL}
-      - USER_GITHUB_TOKEN=${USER_GITHUB_TOKEN}
-    volumes:
-      - ".:/app:rw"
+    image: ghcr.io/researchculture/hwidx-website:latest
+    container_name: hwidx-website
+    networks:
+      - http
+    ports:
+      - "8081:80/tcp"
+    restart: unless-stopped
+
+networks:
+  http:
+    external: true
