@@ -1,0 +1,20 @@
+---
+permalink: "/metapage.html"
+eleventyExcludeFromCollections: true
+---
+{#- Shell for every hwidx metapage. nginx serves this for any path without a static page,
+    and metapage.js renders the entry from the router's live dataset API. -#}
+{%- extends "base.njk" -%}
+
+{%- block content -%}
+<div data-metapage>
+<p class="loading" role="status">Loading…</p>
+</div>
+<noscript>
+<p>Metapages are loaded from the live index and need JavaScript enabled.</p>
+</noscript>
+{%- endblock content -%}
+
+{%- block scripts -%}
+<script type="module" src="/assets/js/metapage.js?v={{ build.version }}"></script>
+{%- endblock scripts -%}

@@ -1,0 +1,20 @@
+{#- Home page: search hero above the markdown content -#}
+{%- extends "base.njk" -%}
+{%- from "components/hwidx-search.njk" import searchBox -%}
+
+{%- block hero -%}
+<section class="hero">
+<div class="hero__inner">
+<h1 class="hero__title">Stable, shareable identifiers for hardware</h1>
+<p class="hero__lead">An open index of permanent addresses for hardware artifacts. Print one on a device, and it keeps pointing at the right documentation long after the original links have moved.</p>
+{{ searchBox({ large: true }) }}
+<p class="hero__hint">Try <a href="/search/?q=gamepad">gamepad</a>, an organisation such as <a href="/search/?q=Lancaster">Lancaster</a>, an identifier such as <a href="/search/?q=2%2F1">2/1</a>, or browse <a href="/catalog/">the full catalog</a>.</p>
+</div>
+</section>
+{%- endblock hero -%}
+
+{%- block content -%}
+<div class="prose">
+{{ content | safe }}
+</div>
+{%- endblock content -%}

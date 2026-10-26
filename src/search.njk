@@ -1,0 +1,39 @@
+---
+permalink: "/search/index.html"
+title: Search
+hideHeaderSearch: true
+---
+{#- Search results page. search.js reads ?q=, ?field= and ?page= and queries the router's search API. -#}
+{%- extends "base.njk" -%}
+
+{%- block content -%}
+<h1 class="page-title">Search the index</h1>
+<p class="muted">Find a device by its name or its organisation, or look up an identifier: paste a full link such as <code>hwidx.org/1/0/0.9</code>, or just its start, such as <code>2/1</code>.</p>
+
+<form class="search-form" action="/search/" method="get" role="search" data-search-form>
+<div class="search-box search-box--large">
+<svg class="search-box__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+<input type="search" name="q" placeholder="e.g. gamepad, Lancaster, 2/1" aria-label="Search the index" required maxlength="200" autofocus>
+<button type="submit">Search</button>
+</div>
+<select name="field" aria-label="Search in">
+<option value="all">Everything</option>
+<option value="name">Device names only</option>
+<option value="org">Organisations only</option>
+<option value="id">Identifiers only</option>
+</select>
+</form>
+
+<p class="muted" data-search-status aria-live="polite"></p>
+<section data-search-organisations hidden></section>
+<ol class="result-list" data-search-results></ol>
+<nav class="pagination" aria-label="Result pages" data-search-pagination></nav>
+
+<noscript>
+<p>Search results are loaded from the live index and need JavaScript enabled.</p>
+</noscript>
+{%- endblock content -%}
+
+{%- block scripts -%}
+<script type="module" src="/assets/js/search.js?v={{ build.version }}"></script>
+{%- endblock scripts -%}

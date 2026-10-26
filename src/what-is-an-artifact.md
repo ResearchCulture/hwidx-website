@@ -1,6 +1,7 @@
-{% extends 'base.njk' %}
-
-{% block content %}
+---
+layout: page.njk
+title: What is an artifact?
+---
 
 # What is an "Artifact"?
 
@@ -27,5 +28,3 @@ Examples of items not acceptable for hwidx.org identifiers are shown in the non-
 Exceptions to the above will be considered on their own merit, and should be discussed in an appropriate Github pull request or comment.
 
 These lists may be revised at a later date. (Last revision October 2025)
-
-{% endblock content %}

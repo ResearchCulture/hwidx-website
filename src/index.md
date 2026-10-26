@@ -1,6 +1,8 @@
-{% extends 'base.njk' %}
+---
+layout: home.njk
+hideHeaderSearch: true
+---
 
-{% block content %}
 An open organization that helps create stable, consistent, and shareable identifiers for [artifacts](/what-is-an-artifact) deployed at moderate to large scales.
 These identifiers make it easy to uniquely recognize and reference artifacts anywhere. Think of them as forwarding addresses for hardware documentation.
 
@@ -37,6 +39,8 @@ This is to allow for both automatic identification through the QR code, and to a
 
 Every identifier metapage includes a number of reasonably high resolution samples which can be directly used on PCB silkscreens. The one used above matches [hwidx.org/2/1/1.0/](/2/1/1.0)
 
+Identifiers can also be made readable by touch. Each metapage shows the identifier in braille, with a true-size SVG for opening the solder mask in the braille dot pattern, so that wave soldering leaves raised dots on the board. See [Braille on PCBs](/braille/) for how it works.
+
 ## I have a hwidx.org identifier - How do I use it?
 Identifiers are the URL you use to access the linked resource. Simply visit `hwidx.org/` with the identifier appended to be taken to the current forward URL.
 
@@ -51,5 +55,3 @@ To view the full catalog of devices in the index, click the button below.
 <div class="w-full flex justify-center">
     <a href="/catalog" class="button">The Device Catalog</a>
 </div>
-
-{% endblock content %}

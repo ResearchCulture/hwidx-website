@@ -1,31 +1,47 @@
-<html>
+{%- from "components/hwidx-search.njk" import searchBox -%}
+<!doctype html>
+<html lang="en">
 <head>
-    <title>Hardware Index</title>
-    <link rel="stylesheet" href="/assets/css/main.css">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% if title %}{{ title }} · {% endif %}hwidx.org – The Hardware Index</title>
+<meta name="description" content="An open index of stable, consistent, and shareable identifiers for hardware artifacts.">
+<link rel="stylesheet" href="/assets/css/main.css?v={{ build.version }}">
 </head>
 <body>
-    <header>
-        <h1 class="big-title"><a href="/">hwidx.org - The Hardware Index</a></h1>
-        <div class="w-full flex gap-3 justify-center bg-gray-300 shadow border-white p-2 m-0">
-            <a href="/catalog" class="button">The Device Catalog</a>
-            <a href="/make-a-qr-code" class="button bg-white border border-gray-500">Make a QR Code</a>
-        </div>
-    </header>
-    {% block wrapper %}
-    Missing wrapper content...
-    {% endblock wrapper %}
-    <footer>
-        <div>&copy; 2024 Hardware Index. All rights reserved.</div>
-        <div>Contact via: <a href="https://github.com/ResearchCulture/hwidx/issues" target="_blank">GitHub Issues</a></div>
-        <div>Analytics by <a href="https://simpleanalytics.com/" target="_blank">Simple Analytics</a></div>
-        <div>Funded by <a href="https://wellcome.org/" target="_blank">Wellcome</a></div>
-        <a class="nodecorate" href="https://wellcome.org/" target="_blank"><img class="logo" src="/assets/img/wellcome-logo-white.png" alt="Wellcome Logo" /></a>
-    </footer>
-    {% block scripts %}
-    {% endblock scripts %}
-    <!-- 100% privacy-first analytics -->
-    <script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+<header class="site-header">
+<div class="site-header__inner">
+<a class="brand" href="/"><span class="brand__mark">hwidx.org</span><span class="brand__tag">The Hardware Index</span></a>
+<nav class="site-nav" aria-label="Main">
+<a href="/catalog/"{% if page.url and page.url.startsWith("/catalog") %} aria-current="page"{% endif %}>Catalog</a>
+<a href="/search/"{% if page.url and page.url.startsWith("/search") %} aria-current="page"{% endif %}>Search</a>
+<a href="/make-a-qr-code/"{% if page.url and page.url.startsWith("/make-a-qr-code") %} aria-current="page"{% endif %}>Make a QR code</a>
+</nav>
+{%- if not hideHeaderSearch %}
+{{ searchBox() }}
+{%- endif %}
+</div>
+</header>
+{% block hero %}{% endblock hero %}
+{% block wrapper %}
+Missing wrapper content...
+{% endblock wrapper %}
+<footer class="site-footer">
+<div class="site-footer__inner">
+<div>
+<div class="brand__mark">hwidx.org</div>
+<div>&copy; 2024 Hardware Index. All rights reserved.</div>
+<ul class="site-footer__links">
+<li>Contact via <a href="https://github.com/ResearchCulture/hwidx/issues" target="_blank" rel="noopener">GitHub Issues</a></li>
+<li>Analytics by <a href="https://simpleanalytics.com/" target="_blank" rel="noopener">Simple Analytics</a></li>
+</ul>
+</div>
+<a class="site-footer__funder" href="https://wellcome.org/" target="_blank" rel="noopener"><span>Funded by Wellcome</span><img src="/assets/img/wellcome-logo-white.png" alt="Wellcome logo"></a>
+</div>
+</footer>
+{% block scripts %}
+{% endblock scripts %}
+<!-- 100% privacy-first analytics -->
+<script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
 </body>
 </html>

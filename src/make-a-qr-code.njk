@@ -1,13 +1,16 @@
+---
+title: Make a QR code
+---
 {% extends 'base.njk' %}
 
 {% block content %}
-<section class="max-w-4xl mx-auto py-10 px-6">
-  <h2 class="text-3xl font-bold mb-4">Live QR Code Generator</h2>
-  <p>Enter your device details to generate a QR code.</p>
-  <p class="mb-6">Note that this will not automatically grant the use of this identifier. To obtain an identifier please open a pull request on <a href="https://github.com/ResearchCulture/hwidx" target="_blank">the HWIDX Github Index Repository</a>.</p>
+<section>
+  <h1 class="page-title">Make a QR code</h1>
+  <p class="lead mb-2">Enter your device details to generate a QR code or label.</p>
+  <p class="muted mb-6">Note that this will not automatically grant the use of this identifier. To obtain an identifier please open a pull request on <a href="https://github.com/ResearchCulture/hwidx" target="_blank">the HWIDX Github Index Repository</a>.</p>
 
   <form data-qr-generator class="flex-col gap-4">
-    <div class="grid grid-cols-3 gap-4 items-center my-4">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-center my-4">
         <div class="flex flex-col gap-2">
             <label for="qr-input-org" class="font-semibold">Organisation</label>
             <input
@@ -47,6 +50,8 @@
         <span data-qr-status class="text-sm text-gray-700">Enter your information above to generate a QR code.</span>
     </div>
 
+    <p data-qr-lookup class="lookup my-3" aria-live="polite"></p>
+
     <div>
         <label for="qr-output-url" class="font-semibold">Test URL (opens in a new tab)</label>
         <a href="https://hwidx.org/" target="_blank" rel="noopener noreferrer" data-qr-output-url>...</a>
@@ -64,7 +69,7 @@
         </select>
     </div>
 
-    <div class="flex flex-col items-center gap-2 width-full bg-striped p-4">
+    <div class="flex flex-col items-center gap-3 w-full bg-striped p-6 mt-4">
         <h3>Preview</h3>
         <canvas
         data-qr-canvas
@@ -72,7 +77,19 @@
         height="600"
                 class="block w-[300px] max-w-full h-auto shadow-2xl"
         ></canvas>
-        <a data-qr-download class="button bg-white border border-gray-500" href="#">Download as a PNG</a>
+        <a data-qr-download class="button secondary" href="#">Download as a PNG</a>
+    </div>
+
+    <div class="card mt-4" data-braille-panel hidden>
+        <h3 class="mt-0">Braille</h3>
+        <p class="muted text-sm mb-3">The same address in Unified English Braille (uncontracted), for raised solder-dot braille alongside the QR code. <a href="/braille/">How to make raised braille on a PCB</a>.</p>
+        <div class="braille-strip"><canvas data-braille-canvas class="braille-canvas" role="img"></canvas></div>
+        <p class="braille-meta" data-braille-summary></p>
+        <p class="notice" data-braille-warning hidden></p>
+        <div class="button-row mb-0">
+            <a class="button secondary" href="#" data-braille-png>Download PNG</a>
+            <button type="button" class="button secondary" data-braille-svg>Download SVG (1:1 mm)</button>
+        </div>
     </div>
     
   </form>
@@ -80,6 +97,6 @@
 {% endblock content %}
 
 {% block scripts %}
-<script type="module" src="/assets/js/mark-types.js"></script>
-<script type="module" src="/assets/js/mark-generator.js"></script>
+<script type="module" src="/assets/js/mark-types.js?v={{ build.version }}"></script>
+<script type="module" src="/assets/js/mark-generator.js?v={{ build.version }}"></script>
 {% endblock scripts %}

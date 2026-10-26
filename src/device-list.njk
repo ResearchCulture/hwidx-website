@@ -1,90 +1,43 @@
 ---
-pagination:
-  data: hwidx
-  reverse: true
-  size: 50
-permalink: "{% if pagination.pageNumber == 0 %}/catalog/{% else %}/catalog/{{ pagination.pageNumber + 1 }}/{% endif %}"
+permalink: "/catalog/index.html"
+title: Device catalog
 ---
-
+{#- Shell for the device catalog. nginx serves this for /catalog/ and /catalog/<page>/,
+    and catalog.js fills it from the router's live dataset API. -#}
 {%- extends "wide.njk" -%}
 
 {%- block content -%}
-<div class="mb-10">
-  <h1><strong>hwidx.org Device List</strong></h1>
-</div>
-
+<div class="page-header">
 <div>
-    <table class="w-full">
-        <thead>
-            <tr>
-                <th class="text-left text-2xl">Title</th>
-                <th class="text-left text-2xl">Device</th>
-                <th class="text-left text-2xl">Organization</th>
-                <th class="text-left text-2xl">Group</th>
-            </tr>
-        </thead>
-        <tbody>
-            {%- for item in pagination.items -%}
-            {%- set entity = hwidx[item] -%}
-            <tr>
-                <td class="font-bold">
-                {%- if entity.name -%}
-                    {{ entity.name }}
-                {%- else -%}
-                    (No title)
-                {%- endif -%}
-                </td>
-                <td>
-                    <a href="/{{ item }}/" class="no-arrow">/{{ item }}</a>
-                </td>
-                <td>
-                {%- if entity.org -%}
-                    {%- if entity.org.url -%}
-                    <a href="{{ entity.org.url }}">{{ entity.org.name }}</a>
-                    {%- else -%}
-                    {{ entity.org.name }}
-                    {%- endif -%}
-                {%- else -%}
-                    (No organization)
-                {%- endif -%}
-                </td>
-                <td>
-                {%- if entity.group -%}
-                    {%- if entity.group.url -%}
-                    <a href="{{ entity.group.url }}">{{ entity.group.name }}</a>
-                    {%- else -%}
-                    {{ entity.group.name }}
-                    {%- endif -%}
-                {%- else -%}
-                    (No group)
-                {%- endif -%}
-                </td>
-            </tr>
-            {%- endfor -%}
-        </tbody>
-    </table>
+<h1 class="page-title">Device catalog</h1>
+<p class="muted" data-catalog-count>&nbsp;</p>
+</div>
+<a class="button secondary" href="/search/">Search the index</a>
 </div>
 
-<div class="pagination mt-10 flex justify-center items-center">
-    {%- if pagination.href.previous -%}
-    <a href="{{ pagination.href.previous }}" class="btn btn-primary mr-4 no-arrow">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 inline-block">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-        </svg> Previous
-    </a>
-    {%- endif -%}
-
-    {%- for pageNum in range(0, pagination.pages | length) -%}
-        <a href="{{ pagination.href.all[pageNum] }}" class="btn no-arrow {% if pageNum == pagination.pageNumber %}btn-active{% else %}btn-secondary{% endif %} mx-1">{{ pageNum + 1 }}</a>
-    {%- endfor -%}
-
-    {%- if pagination.href.next -%}
-    <a href="{{ pagination.href.next }}" class="btn btn-primary no-arrow ml-4">
-        Next <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 inline-block">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-        </svg>
-    </a>
-    {%- endif -%}
-
+<div class="table-wrap">
+<table class="data-table">
+<thead>
+<tr>
+<th scope="col">Name</th>
+<th scope="col">Identifier</th>
+<th scope="col">Organisation</th>
+<th scope="col">Group</th>
+</tr>
+</thead>
+<tbody data-catalog-rows>
+<tr><td colspan="4"><p class="loading" role="status">Loading…</p></td></tr>
+</tbody>
+</table>
 </div>
+
+<noscript>
+<p>The catalog is loaded from the live index and needs JavaScript enabled.</p>
+</noscript>
+
+<nav class="pagination" aria-label="Catalog pages" data-catalog-pagination></nav>
 {%- endblock content -%}
+
+{%- block scripts -%}
+<script type="module" src="/assets/js/catalog.js?v={{ build.version }}"></script>
+{%- endblock scripts -%}

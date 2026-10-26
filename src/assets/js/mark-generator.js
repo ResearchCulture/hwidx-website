@@ -7,6 +7,77 @@ import {
     renderQRCodeToCanvas,
     createSlimQRCanvas
 } from "./mark-types.js";
+import { toBraille, brailleSize, renderBrailleCanvas, brailleSvg, downloadBlob, fileStem } from "./braille.js";
+import { API_ROOT, h } from "./dom.js";
+
+const LOOKUP_DELAY_MS = 300;
+const REGISTER_URL = "https://github.com/ResearchCulture/hwidx";
+
+// An identifier's record from the live index, or null if it isn't there
+async function fetchRecord(segs, signal) {
+    const response = await fetch(`${API_ROOT}/${segs.map(encodeURIComponent).join("/")}`, {
+        signal,
+        headers: { Accept: "application/json" },
+    });
+    if (response.status === 404 || response.status === 400) {
+        return null;
+    }
+    if (!response.ok) {
+        throw new Error(`API responded with ${response.status}`);
+    }
+    return response.json();
+}
+
+function versionList(record) {
+    const slugs = record.children.map((child) => `v${child.slug}`);
+    return slugs.length > 8 ? `${slugs.slice(0, 8).join(", ")} and ${slugs.length - 8} more` : slugs.join(", ");
+}
+
+// What the index knows about the identifier typed so far, as [kind, content]
+async function describeIdentifier(segs, signal) {
+    const key = segs.join("/");
+    const record = await fetchRecord(segs, signal);
+
+    if (record?.type === "entry") {
+        return ["found", [
+            `✓ hwidx.org/${key} is registered: `,
+            h("strong", {}, record.data.name ?? "(untitled)"),
+            ". ",
+            h("a", { href: `/${key}/` }, "View its page"),
+        ]];
+    }
+
+    if (record) {
+        if (segs.length === 1) {
+            const name = record.data.org?.name ?? `Organisation ${key}`;
+            return ["info", [`Organisation ${key}: `, h("strong", {}, name), ` (${record.children.length} devices)`]];
+        }
+        if (segs.length === 2) {
+            const latest = record.children[record.children.length - 1];
+            return ["info", [
+                `Device ${key}: `, h("strong", {}, latest?.name ?? "(untitled)"),
+                record.children.length ? `, with versions ${versionList(record)}` : "",
+            ]];
+        }
+        return ["info", `hwidx.org/${key} is a directory in the index, not a single device.`];
+    }
+
+    const register = ["To register it, open a pull request on ", h("a", { href: REGISTER_URL }, "GitHub"), "."];
+
+    if (segs.length === 3) {
+        const device = await fetchRecord(segs.slice(0, 2), signal);
+        if (device?.type === "directory" && device.children.length) {
+            const latest = device.children[device.children.length - 1];
+            return ["missing", [
+                `hwidx.org/${key} isn't registered yet. Device ${segs[0]}/${segs[1]} is `,
+                h("strong", {}, latest.name ?? "(untitled)"), `, with versions ${versionList(device)}. `,
+                ...register,
+            ]];
+        }
+    }
+
+    return ["missing", [`hwidx.org/${key} isn't in the index yet. `, ...register]];
+}
 
 function createBrowserCanvas(width, height) {
     const canvas = document.createElement("canvas");
@@ -52,6 +123,15 @@ export function attachLiveQRGenerator(root = document) {
     const downloadLink = form.querySelector("[data-qr-download]");
     const status = form.querySelector("[data-qr-status]");
     const mark_type = form.querySelector("[data-qr-output-style]");
+    const lookup = form.querySelector("[data-qr-lookup]");
+    const braillePanel = form.querySelector("[data-braille-panel]");
+    const brailleCanvas = form.querySelector("[data-braille-canvas]");
+    const brailleSummary = form.querySelector("[data-braille-summary]");
+    const brailleWarning = form.querySelector("[data-braille-warning]");
+    const braillePng = form.querySelector("[data-braille-png]");
+    const brailleSvgButton = form.querySelector("[data-braille-svg]");
+    let brailleCells = "";
+    let brailleText = "";
 
     // Initial pull from any/all url parameters to pre-fill the form
     const urlParams = new URLSearchParams(window.location.search);
@@ -82,6 +162,80 @@ export function attachLiveQRGenerator(root = document) {
         if (downloadLink instanceof HTMLAnchorElement) {
             downloadLink.removeAttribute("href");
         }
+
+        if (braillePanel) {
+            braillePanel.hidden = true;
+        }
+    }
+
+    // The printed short form of the URL (no scheme) in braille, next to the QR code
+    async function renderBraille(value) {
+        if (!braillePanel || !(brailleCanvas instanceof HTMLCanvasElement)) {
+            return;
+        }
+
+        brailleText = value.replace(/^https?:\/\//, "").toLowerCase();
+        const { cells, unsupported } = toBraille(brailleText);
+        brailleCells = cells;
+
+        await renderBrailleCanvas(brailleCanvas, cells);
+        brailleCanvas.setAttribute("aria-label", `${brailleText} in braille`);
+
+        const size = brailleSize(cells);
+        if (brailleSummary) {
+            brailleSummary.textContent = `${brailleText}: ${size.cells} cells, about ${Math.round(size.widthMm)} × ${size.heightMm.toFixed(1)} mm at standard size.`;
+        }
+        if (brailleWarning) {
+            brailleWarning.hidden = unsupported.length === 0;
+            brailleWarning.textContent = `These characters have no braille transcription here and were left out: ${unsupported.join(" ")}`;
+        }
+        if (braillePng instanceof HTMLAnchorElement) {
+            braillePng.href = brailleCanvas.toDataURL("image/png");
+            braillePng.download = `${fileStem(brailleText)}-braille.png`;
+        }
+        braillePanel.hidden = false;
+    }
+
+    brailleSvgButton?.addEventListener("click", () => {
+        if (brailleCells) {
+            downloadBlob(new Blob([brailleSvg(brailleCells, `${brailleText} in braille`)], { type: "image/svg+xml" }), `${fileStem(brailleText)}-braille.svg`);
+        }
+    });
+
+    // Look up the identifier typed so far in the live index, once typing pauses
+    let lookupTimer = null;
+    let lookupAbort = null;
+
+    function scheduleLookup() {
+        if (!lookup) {
+            return;
+        }
+
+        clearTimeout(lookupTimer);
+        lookupAbort?.abort();
+
+        const values = [input_org.value, input_device.value, input_version.value].map((value) => value.trim());
+        const segs = values.slice(0, values.indexOf("") === -1 ? 3 : values.indexOf(""));
+        if (segs.length === 0) {
+            lookup.className = "lookup my-3";
+            lookup.replaceChildren();
+            return;
+        }
+
+        lookupTimer = setTimeout(async () => {
+            lookupAbort = new AbortController();
+            try {
+                const [kind, content] = await describeIdentifier(segs, lookupAbort.signal);
+                lookup.className = `lookup my-3 lookup--${kind}`;
+                lookup.replaceChildren(...[content].flat());
+            } catch (error) {
+                if (error.name !== "AbortError") {
+                    console.error(error);
+                    lookup.className = "lookup my-3";
+                    lookup.textContent = "Couldn't check the index just now.";
+                }
+            }
+        }, LOOKUP_DELAY_MS);
     }
 
     const render = async () => {
@@ -213,6 +367,8 @@ export function attachLiveQRGenerator(root = document) {
                 downloadLink.download = "hwidx-qr.png";
             }
 
+            await renderBraille(value);
+
             if (status) {
                 status.textContent = "QR code ready.";
             }
@@ -225,14 +381,15 @@ export function attachLiveQRGenerator(root = document) {
         }
     };
 
-    input_org.addEventListener("input", () => { void render(); });
-    input_device.addEventListener("input", () => { void render(); });
-    input_version.addEventListener("input", () => { void render(); });
+    input_org.addEventListener("input", () => { void render(); scheduleLookup(); });
+    input_device.addEventListener("input", () => { void render(); scheduleLookup(); });
+    input_version.addEventListener("input", () => { void render(); scheduleLookup(); });
     if (mark_type instanceof HTMLSelectElement) {
         mark_type.addEventListener("change", () => { void render(); });
     }
 
     void render();
+    scheduleLookup();
 }
 
 if (typeof window !== "undefined") {

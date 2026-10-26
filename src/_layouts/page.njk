@@ -1,0 +1,8 @@
+{#- Layout for markdown content pages -#}
+{%- extends "base.njk" -%}
+
+{%- block content -%}
+<div class="prose">
+{{ content | safe }}
+</div>
+{%- endblock content -%}

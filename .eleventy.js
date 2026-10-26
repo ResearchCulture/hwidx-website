@@ -90,19 +90,14 @@ module.exports = (eleventyConfig) => {
     return yaml.dump(filtered);
   });
 
-  // Configure Markdown-it with deflist plugin
-  module.exports = function (eleventyConfig) {
-    let options = {
-      html: true,
-      breaks: true,
-      linkify: true,
-    };
+  // Configure Markdown-it with deflist plugin. Soft line breaks and bare-URL linking stay off,
+  // as the pages were written without them (e.g. "hwidx.org" in headings isn't meant to be a link).
+  const mdEngine = markdownIt({
+    html: true,
+  });
+  mdEngine.use(require("markdown-it-deflist"));
 
-    const mdEngine = markdownIt(options);
-    mdEngine.use(require("markdown-it-deflist"));
-
-    eleventyConfig.setLibrary("md", mdEngine);
-  };
+  eleventyConfig.setLibrary("md", mdEngine);
 
   
   // Copy static assets to the output folder
