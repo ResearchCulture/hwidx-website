@@ -18,3 +18,7 @@
 {{ content | safe }}
 </div>
 {%- endblock content -%}
+
+{%- block scripts -%}
+<script type="module" src="/assets/js/popular.js?v={{ build.version }}"></script>
+{%- endblock scripts -%}

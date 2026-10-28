@@ -48,6 +48,14 @@ For example, if I have the identifier `/123/456/1.0` visiting the address `hwidx
 
 We also provide a metadata record service through `m.hwidx.org` which uses the same path, in this case `m.hwidx.org/123/456/1.0` which can be used as a device ['vcard'](https://en.wikipedia.org/wiki/VCard) of sorts.
 
+## Popular this week
+
+The most visited identifiers this week (Monday to Sunday). Each links to its metapage, and to its documentation where the identifier currently redirects to one.
+
+<div data-popular>
+<p class="loading" role="status">Loading…</p>
+</div>
+
 ## Artifacts in the Index
 
 To view the full catalog of devices in the index, click the button below.

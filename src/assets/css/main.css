@@ -824,6 +824,24 @@
         .data-table th:nth-child(n + 3), .data-table td.secondary-cell { display: none; }
     }
 
+    /* ---------- Usage stats (metapages) and popular identifiers (home page) ---------- */
+
+    .stats-table tbody th { font-weight: 600; color: var(--ink); background: none; text-transform: none; letter-spacing: normal; font-size: 0.95rem; border-bottom: 1px solid var(--line); }
+    .stats-table tbody tr:last-child th { border-bottom: none; }
+    .stats-table .stat-count { font-weight: 600; font-variant-numeric: tabular-nums; }
+    .stats-table .stat-projected { display: block; color: var(--muted); font-size: 0.8rem; }
+    .table-wrap + .muted { margin-top: 0.5rem; }
+    .data-table .number-cell { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    /* One line per device; the table scrolls sideways on narrow screens rather than wrapping */
+    .popular-table td { vertical-align: middle; white-space: nowrap; }
+    .table-wrap .popular-table { margin: 0; } /* it sits in markdown, where .prose table adds margins inside the border */
+    .popular-table .popular-links a + a { margin-left: 1rem; }
+
+    /* Every column stays visible on phones, unlike the catalog's secondary columns */
+    @media (max-width: 40rem) {
+        .stats-table th:nth-child(n + 3), .popular-table th:nth-child(n + 3) { display: table-cell; }
+    }
+
     /* ---------- Search results ---------- */
 
     .search-form {
@@ -932,17 +950,4 @@
 
     .site-footer a { color: var(--color-blue-300); text-decoration: none; }
     .site-footer a:hover { color: white; }
-
-    .site-footer__funder {
-        display: flex;
-        align-items: center;
-        gap: 0.875rem;
-        color: var(--chrome-text) !important;
-    }
-
-    .site-footer__funder img {
-        width: 56px;
-        height: 56px;
-        border-radius: 0.375rem;
-    }
 }

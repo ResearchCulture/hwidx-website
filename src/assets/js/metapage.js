@@ -125,6 +125,42 @@ function versionNav(record) {
     ];
 }
 
+const STATS_PERIODS = [["day", "Today"], ["week", "This week"], ["month", "This month"]];
+
+function statCell(stat) {
+    return h("td", {},
+        h("span", { class: "stat-count" }, `${stat.count}`),
+        stat.projected !== stat.count ? h("span", { class: "stat-projected" }, `~${stat.projected} projected`) : null
+    );
+}
+
+// How often the router has sent visitors on to the documentation, or here to the metapage, this day, week and month.
+// Projections are the router's conservative extrapolation of the count so far across the whole period.
+function statsSection(stats) {
+    if (!stats) {
+        return null;
+    }
+
+    return [
+        h("h2", { class: "section-title" }, "Usage"),
+        h("div", { class: "table-wrap" },
+            h("table", { class: "data-table stats-table" },
+                h("thead", {}, h("tr", {},
+                    h("th", { scope: "col" }, "Period"),
+                    h("th", { scope: "col" }, "Redirects"),
+                    h("th", { scope: "col" }, "Sent to metapage")
+                )),
+                h("tbody", {}, STATS_PERIODS.map(([period, label]) => h("tr", {},
+                    h("th", { scope: "row" }, label),
+                    statCell(stats.redirects[period]),
+                    statCell(stats.metapage[period])
+                )))
+            )
+        ),
+        h("p", { class: "muted small" }, "Visits through hwidx.org that the router sent on to the documentation (redirects) or to this page. Weeks run Monday to Sunday; projections are a cautious estimate from the rate so far, and steady as each period goes on."),
+    ];
+}
+
 function qrCard(key, parent) {
     const [o, d = "", v = ""] = key.split("/");
     const generator = `/make-a-qr-code/?${new URLSearchParams({ type: "logo-mark-horizontal", o, d, v })}`;
@@ -161,6 +197,7 @@ function renderEntry(record) {
                     ? h("div", { class: "button-row" }, h("a", { class: "button", href: data.url }, "Open documentation ↗"))
                     : null,
                 detailRows(data),
+                statsSection(record.stats),
                 brailleSection(record.key),
                 yamlRecord(data)
             ),
@@ -186,6 +223,7 @@ function renderOrg(record) {
                 )
             ))
             : h("p", { class: "muted" }, "No devices registered yet."),
+        statsSection(record.stats),
         Object.keys(record.data).length ? yamlRecord(record.data) : null,
     ];
 }
@@ -229,6 +267,7 @@ function renderDevice(record) {
                 ))
             ))
             : h("p", { class: "muted" }, "No versions found."),
+        statsSection(record.stats),
         Object.keys(record.data).length ? yamlRecord(record.data) : null,
     ];
 }
@@ -247,6 +286,7 @@ function renderDirectory(record) {
                 ))
             ))
             : h("p", { class: "muted" }, "No entries found."),
+        statsSection(record.stats),
         Object.keys(record.data).length ? yamlRecord(record.data) : null,
     ];
 }
