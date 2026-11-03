@@ -458,7 +458,7 @@
 
     .button.small { font-size: 0.85rem; padding: 0.35rem 0.75rem; }
 
-    .button-row { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 1.5rem 0; }
+    .button-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 1.5rem 0; }
 
     /* ---------- Identifiers, badges, breadcrumbs ---------- */
 
@@ -525,6 +525,12 @@
 
     .badge--active { background: var(--color-green-50); color: var(--color-green-700); border-color: var(--color-green-200); }
     .badge--pending { background: var(--color-amber-50); color: var(--color-amber-700); border-color: var(--color-amber-200); }
+    .redirect-url { min-width: 0; overflow-wrap: anywhere; }
+    .redirect-url__target { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; user-select: all; }
+    .badge--link-up { background: var(--color-green-50); color: var(--color-green-700); border-color: var(--color-green-200); }
+    .badge--link-down { background: var(--color-red-50); color: var(--color-red-700); border-color: var(--color-red-200); }
+    .badge--link-unknown { background: var(--surface); color: var(--muted); border-color: var(--line); }
+    a.badge { text-decoration: none; }
     .badge--latest { background: var(--color-blue-50); color: var(--color-blue-700); border-color: var(--color-blue-200); }
     .badge--latest::before { display: none; }
 

@@ -189,13 +189,29 @@ function linkDownNotice(record) {
         return null;
     }
 
-    const hours = record.linkCheckHours;
+    const hours = record.linkCheck?.everyHours;
     return h("p", { class: "notice", role: "status" },
         h("strong", {}, "The documentation for this device isn't responding. "),
         "When you followed this link, hwidx.org checked where it points and the page returned an error or didn't answer, so you've been brought here instead. ",
         hours ? `hwidx.org rechecks each link ${checkEvery(hours)} when someone follows it, so it will go straight through again once the page is back. ` : null,
         h("a", { href: "/link-checker/" }, "How the link checker works")
     );
+}
+
+// How the router's last check of the documentation link went; null if the router isn't checking this entry
+function linkStatusPill(record) {
+    const check = record.linkCheck;
+    if (!check) {
+        return null;
+    }
+
+    const [kind, label, title] = check.up === null
+        ? ["unknown", "Not checked yet", "The router hasn't followed this link since it started checking. It checks when someone first uses it."]
+        : check.up
+            ? ["up", "Link working", `Responded with ${check.status} when last checked ${new Date(check.checkedAt).toLocaleString()}.`]
+            : ["down", "Link not responding", `${check.status ? `Responded with ${check.status}` : "Did not answer"} when last checked ${new Date(check.checkedAt).toLocaleString()}.`];
+
+    return h("a", { class: `badge badge--link-${kind}`, href: "/link-checker/", title }, label);
 }
 
 function renderEntry(record) {
@@ -217,7 +233,14 @@ function renderEntry(record) {
                 description.length ? h("div", { class: "lead" }, description.map((line) => h("p", {}, `${line}`))) : null,
                 pending ? h("p", { class: "notice" }, "This identifier is pending, so hwidx.org currently sends visitors to this page.") : null,
                 isLink(data.url)
-                    ? h("div", { class: "button-row" }, h("a", { class: "button", href: data.url }, "Open documentation ↗"))
+                    ? h("div", { class: "button-row" },
+                        // Through the router, so the visit is counted and a dead link lands back here with an explanation.
+                        // Pending entries are the exception: the router would send them straight back to this page.
+                        h("a", { class: "button", href: pending ? data.url : `https://hwidx.org/${record.key}` }, "Open documentation ↗"),
+                        pending ? null : linkStatusPill(record),
+                        // Plain text, not a link, so what the button leads to can be checked before clicking it
+                        h("span", { class: "redirect-url muted small" }, "Goes to ", h("span", { class: "redirect-url__target" }, `${data.url}`))
+                    )
                     : null,
                 detailRows(data),
                 statsSection(record.stats),
