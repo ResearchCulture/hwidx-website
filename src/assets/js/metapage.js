@@ -176,6 +176,28 @@ function qrCard(key, parent) {
     );
 }
 
+// "once a day", "every 6 hours"...
+function checkEvery(hours) {
+    if (hours === 24) return "once a day";
+    if (hours === 1) return "once an hour";
+    return hours % 24 === 0 ? `every ${hours / 24} days` : `every ${hours} hours`;
+}
+
+// Shown when the router sent the visitor here (?reason=link-down) because the documentation link wasn't answering
+function linkDownNotice(record) {
+    if (new URLSearchParams(window.location.search).get("reason") !== "link-down") {
+        return null;
+    }
+
+    const hours = record.linkCheckHours;
+    return h("p", { class: "notice", role: "status" },
+        h("strong", {}, "The documentation for this device isn't responding. "),
+        "When you followed this link, hwidx.org checked where it points and the page returned an error or didn't answer, so you've been brought here instead. ",
+        hours ? `hwidx.org rechecks each link ${checkEvery(hours)} when someone follows it, so it will go straight through again once the page is back. ` : null,
+        h("a", { href: "/link-checker/" }, "How the link checker works")
+    );
+}
+
 function renderEntry(record) {
     const { data } = record;
     const description = data.description === undefined ? [] : [].concat(data.description);
@@ -191,6 +213,7 @@ function renderEntry(record) {
                     record.versions?.current.key === record.key ? h("span", { class: "badge badge--latest" }, "Current version") : null,
                 ]),
                 versionNav(record),
+                linkDownNotice(record),
                 description.length ? h("div", { class: "lead" }, description.map((line) => h("p", {}, `${line}`))) : null,
                 pending ? h("p", { class: "notice" }, "This identifier is pending, so hwidx.org currently sends visitors to this page.") : null,
                 isLink(data.url)

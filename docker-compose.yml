@@ -26,12 +26,17 @@ services:
       - DATA_SYNC_INTERVAL=300
       # Usage stats roll over at midnight, Monday and the 1st in this timezone
       - TZ=Europe/London
+      # Recheck a redirect target when its last check is over this many hours old (0 disables);
+      # visitors go to the metapage while it is down
+      - LINK_CHECK_HOURS=24
+      # API requests per IP per 15 minutes from outside the website's own pages (those are never limited)
+      - API_RATE_LIMIT=300
     volumes:
       # The router's own clone of the hwidx dataset (written as the container's 'node' user, uid/gid 1000);
       # override with HWIDX_DATA_PATH. Start with an empty or missing folder to let the router clone it.
       - ${HWIDX_DATA_PATH:-./data}:/hwidx/config
       # Search/catalog column cache, kept between restarts and rebuilt when the dataset changes, plus the
-      # usage stats (stats.json); override with HWIDX_CACHE_PATH
+      # usage stats (stats.json) and link check state (link-check.json); override with HWIDX_CACHE_PATH
       - ${HWIDX_CACHE_PATH:-./cache}:/hwidx/cache
     restart: unless-stopped
 
