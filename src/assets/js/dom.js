@@ -94,3 +94,32 @@ export function stateBlock(title, message, actions = []) {
 export function loading(text = "Loading…") {
     return h("p", { class: "loading", role: "status" }, text);
 }
+
+// Sets the title, description and address of the current page in the document head and its social preview tags,
+// for pages whose content (and so address) is only known once the script has run. Without `path` no address is set.
+const SITE_URL = "https://m.hwidx.org";
+
+function setHead(selector, create, attr, value) {
+    let el = document.head.querySelector(selector);
+    if (!el) {
+        el = create();
+        document.head.append(el);
+    }
+    el.setAttribute(attr, value);
+}
+
+export function setPageMeta({ title, description, path }) {
+    if (title !== undefined) {
+        document.title = title;
+        setHead('meta[property="og:title"]', () => h("meta", { property: "og:title" }), "content", title);
+    }
+    if (description !== undefined) {
+        setHead('meta[name="description"]', () => h("meta", { name: "description" }), "content", description);
+        setHead('meta[property="og:description"]', () => h("meta", { property: "og:description" }), "content", description);
+    }
+    if (path !== undefined) {
+        const url = `${SITE_URL}${path}`;
+        setHead('link[rel="canonical"]', () => h("link", { rel: "canonical" }), "href", url);
+        setHead('meta[property="og:url"]', () => h("meta", { property: "og:url" }), "content", url);
+    }
+}

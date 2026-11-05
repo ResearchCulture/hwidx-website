@@ -7,7 +7,7 @@ import {
 } from "./braille.js";
 import {
     API_ROOT, h, isLink, linkOrText, namedLink, capitalize,
-    hwid, copyButton, breadcrumbs, stateBlock,
+    hwid, copyButton, breadcrumbs, stateBlock, setPageMeta,
 } from "./dom.js";
 
 // Entry fields with a dedicated place on the page; everything else is listed generically under Details
@@ -352,7 +352,7 @@ function render(record) {
 
 async function loadMetapage(root) {
     const key = window.location.pathname.replace(/^\/+|\/+$/g, "");
-    document.title = `hwidx.org/${key} · hwidx.org – The Hardware Index`;
+    setPageMeta({ title: `hwidx.org/${key} · hwidx.org – The Hardware Index` });
 
     let content;
     try {
@@ -368,9 +368,12 @@ async function loadMetapage(root) {
         } else {
             const record = await response.json();
             const name = record.data?.name;
-            if (name) {
-                document.title = `${name} (hwidx.org/${key}) · hwidx.org – The Hardware Index`;
-            }
+            const description = [].concat(record.data?.description ?? []).map(String)[0];
+            setPageMeta({
+                title: name ? `${name} (hwidx.org/${key}) · hwidx.org – The Hardware Index` : undefined,
+                description: description || (name ? `${name}, hwidx.org/${key}, in the Hardware Index.` : undefined),
+                path: `/${key}`, // only entries that exist get a canonical address
+            });
             content = render(record);
         }
     } catch (err) {

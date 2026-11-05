@@ -5,7 +5,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{% if title %}{{ title }} · {% endif %}hwidx.org – The Hardware Index</title>
-<meta name="description" content="An open index of stable, consistent, and shareable identifiers for hardware artifacts.">
+{%- set pageTitle %}{% if title %}{{ title }} · {% endif %}hwidx.org – The Hardware Index{% endset -%}
+{%- set pageDescription = description or site.description -%}
+<meta name="description" content="{{ pageDescription }}">
+{#- Pages whose address is only known in the browser (the metapage shell, the catalog) set dynamicUrl, and their script adds the canonical and og:url -#}
+{%- if not dynamicUrl %}
+<link rel="canonical" href="{{ site.url }}{{ page.url }}">
+<meta property="og:url" content="{{ site.url }}{{ page.url }}">
+{%- endif %}
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{{ site.name }}">
+<meta property="og:title" content="{{ pageTitle }}">
+<meta property="og:description" content="{{ pageDescription }}">
+<meta property="og:image" content="{{ site.url }}{{ site.image }}">
+<meta property="og:image:alt" content="{{ site.imageAlt }}">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="/assets/css/main.css?v={{ build.version }}">
 </head>
 <body>

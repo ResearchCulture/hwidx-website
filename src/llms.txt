@@ -1,0 +1,27 @@
+# hwidx.org – The Hardware Index
+
+> An open index of stable, shareable identifiers for hardware artifacts. An identifier such as hwidx.org/1/0/0.9 is printed on a device (usually as a QR code) and redirects to that device's current documentation, so the printed address keeps working even when the documentation moves.
+
+Identifiers have the form /organisation-id/device-id/major.minor, for example /2/1/1.0. Once allocated an identifier never changes. The hwidx.org router answers each identifier with a temporary (302) redirect to the device's documentation, or to its metapage on m.hwidx.org when there is no working documentation address. The index is an open dataset of YAML files in a public GitHub repository, also served as JSON by a free, rate-limited API.
+
+## About
+
+- [Home](https://m.hwidx.org/): What hwidx.org is, and how to get and display an identifier
+- [What is an artifact?](https://m.hwidx.org/what-is-an-artifact): The kinds of hardware the index is for
+- [What is link rot?](https://m.hwidx.org/what-is-link-rot): The problem identifiers are meant to solve
+- [The router](https://m.hwidx.org/router/): Where identifiers redirect to, usage counts, the API and its rate limits
+- [Link checker](https://m.hwidx.org/link-checker/): How and when documentation links are checked, and how to recognise or block the checker
+
+## Data
+
+- [hwidx dataset](https://github.com/ResearchCulture/hwidx): The index itself; request an identifier with a pull request
+- [Catalog](https://m.hwidx.org/catalog/): Every identifier in the index, newest first
+- [Search](https://m.hwidx.org/search/): Search by device name, organisation, or identifier
+- [API: one entry](https://m.hwidx.org/api/v1/1/0/0.9): JSON for an identifier, at /api/v1/<identifier>
+- [API: catalog](https://m.hwidx.org/api/v1/catalog): JSON listing of identifiers
+- [API: popular](https://m.hwidx.org/api/v1/popular): The most visited identifiers
+
+## Optional
+
+- [Make a QR code](https://m.hwidx.org/make-a-qr-code/): Generate the QR label for an identifier
+- [Issues](https://github.com/ResearchCulture/hwidx/issues): Questions, problems, and requests such as opting a link out of checking

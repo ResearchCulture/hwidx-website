@@ -103,6 +103,9 @@ module.exports = (eleventyConfig) => {
   // Copy static assets to the output folder
   eleventyConfig.addPassthroughCopy({ "src/assets/img": "assets/img" });
   eleventyConfig.addPassthroughCopy({ "src/assets/fonts": "assets/fonts" });
+  eleventyConfig.addPassthroughCopy({ "src/robots.txt": "robots.txt" });
+  eleventyConfig.addPassthroughCopy({ "src/llms.txt": "llms.txt" });
+  eleventyConfig.addPassthroughCopy({ "src/.well-known": ".well-known" });
 
 
   // Generate our QR codes for each hwidx entity

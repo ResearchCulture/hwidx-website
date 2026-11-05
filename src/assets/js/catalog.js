@@ -1,4 +1,4 @@
-import { API_ROOT, h, namedLink, hwid, pagination } from "./dom.js";
+import { API_ROOT, h, namedLink, hwid, pagination, setPageMeta } from "./dom.js";
 
 const PAGE_SIZE = 50;
 
@@ -53,6 +53,7 @@ async function loadCatalog(rows, pager, count) {
         ? catalog.entries.map(renderRow)
         : [messageRow("No devices found.")]
     ));
+    setPageMeta({ path: catalog.page === 1 ? "/catalog/" : `/catalog/${catalog.page}/` });
     pager.replaceChildren(...pagination(catalog.page - 1, catalog.pages, pageUrl));
 }
 

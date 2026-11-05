@@ -1,0 +1,6 @@
+# Security and abuse reports for hwidx.org (RFC 9116). Issues on GitHub are public.
+Contact: https://github.com/ResearchCulture/hwidx/issues
+Expires: 2027-11-05T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://hwidx.org/.well-known/security.txt
+Canonical: https://m.hwidx.org/.well-known/security.txt
